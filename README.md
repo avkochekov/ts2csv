@@ -20,5 +20,3 @@ and running:
 ts2csv myproject.ts output.csv
 
 It will generate en_US.ts, fr_FR.ts and zh_CN.TS
-
-If anyone has any questions, feel free to reach out.
