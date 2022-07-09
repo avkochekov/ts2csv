@@ -16,18 +16,18 @@ void processTsFileLine(string& line, vector<string>& translationStrings)
         return;
     }
 
-    auto start = line.find("<source>") + 8;
-    auto end = line.find("</source>");
-    auto string = line.substr(start, end - start);
+    size_t start = line.find("<source>") + 8;
+    size_t end = line.find("</source>");
+    string str = line.substr(start, end - start);
 
-    translationStrings.push_back(string);
+    translationStrings.push_back(str);
 }
 
 void processCsvFileLine(string& line, vector<string>& row, vector<vector<string>>& csvContent, string& word)
 {
     row.clear();
 
-    unsigned long long start = -1, end = -1, lastEndIndex = 0;
+    size_t start = -1, end = -1, lastEndIndex = 0;
 
     while(true) {
         start = line.find('"', lastEndIndex) + 1;
@@ -63,24 +63,29 @@ map<string, map<string, string>> generateReplacementsByLanguageMap(vector<vector
 {
     map<string, map<string, string>> replacementsByLanguage;
 
-    for (auto& language : languages) {
+    for (string& language : languages) {
         replacementsByLanguage[language] = map<string, string>();
     }
 
     bool isHeader = true;
 
-    for (auto& content : csvContent) {
+    for (vector<string>& content : csvContent) {
         if (isHeader) {
             isHeader = false;
             continue;
         }
 
-        auto sourceString = content[0];
+        string sourceString = content[0];
 
         for (int i = 1; i < languages.size(); i++) {
-            auto lang = languages[i - 1];
+            string lang = languages[i - 1];
 
-            auto map = &replacementsByLanguage[lang];
+            if (lang.empty()) {
+                break;
+            }
+
+            map<string, string>* map = &replacementsByLanguage[lang];
+
             map->emplace(sourceString, content[i]);
         }
     }
@@ -106,33 +111,33 @@ string do_replace( string const & in, string const & from, string const & to )
 
 void generateTsFiles(vector<vector<string>>& csvContent, string& filename, string& csvFilename)
 {
-    auto headers = csvContent[0];
-    auto languages = getLanguagesFromHeaders(headers);
+    vector<string> headers = csvContent[0];
+    vector<string> languages = getLanguagesFromHeaders(headers);
 
-    auto replacementsByLanguage = generateReplacementsByLanguageMap(csvContent, languages);
+    map<string, map<string, string>> replacementsByLanguage = generateReplacementsByLanguageMap(csvContent, languages);
 
     std::ifstream t(filename);
     std::stringstream buffer;
     buffer << t.rdbuf();
-    auto tsFileContents = buffer.str();
+    string tsFileContents = buffer.str();
     t.close();
 
     map<string, string> languageFiles;
-    const auto TRANSLATION_UNTRANSLATED_STRING = R("<translation type=\"unfinished\"></translation>");
-    const auto TRANSLATION_UNTRANSLATED_STRING_LENGTH = strlen(TRANSLATION_UNTRANSLATED_STRING);
+    const string TRANSLATION_UNTRANSLATED_STRING = "<translation type=\"unfinished\"></translation>";
+    const size_t TRANSLATION_UNTRANSLATED_STRING_LENGTH = TRANSLATION_UNTRANSLATED_STRING.length();
 
-    for (auto &language: languages) {
-        auto replacements = replacementsByLanguage[language];
-        auto langTsFileContents = string(tsFileContents);
+    for (string &language: languages) {
+        map<string, string> replacements = replacementsByLanguage[language];
+        string langTsFileContents = string(tsFileContents);
 
         for (auto it = replacements.begin(); it != replacements.end(); ++it) {
-            auto source = it->first;
-            auto translation = it->second;
-            auto sourceString = "<source>" +  source + "</source>";
-            auto translationString = "<translation>" + translation + "</translation>";
-            auto sourceStringLength = sourceString.length();
-            auto startIndex = langTsFileContents.find(sourceString) + sourceStringLength;
-            auto translationStartIndex = langTsFileContents.find(TRANSLATION_UNTRANSLATED_STRING, startIndex);
+            string source = it->first;
+            string translation = it->second;
+            string sourceString = "<source>" +  source + "</source>";
+            string translationString = "<translation>" + translation + "</translation>";
+            size_t sourceStringLength = sourceString.length();
+            size_t startIndex = langTsFileContents.find(sourceString) + sourceStringLength;
+            size_t translationStartIndex = langTsFileContents.find(TRANSLATION_UNTRANSLATED_STRING, startIndex);
             langTsFileContents = langTsFileContents.replace(translationStartIndex, TRANSLATION_UNTRANSLATED_STRING_LENGTH, translationString);
         }
 
@@ -173,7 +178,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    auto filename = string(argv[1]);
+    string filename = string(argv[1]);
     bool isCsv = argc == 3;
     string csvFilename;
 
@@ -183,7 +188,7 @@ int main(int argc, char *argv[])
 
     string line, word;
 
-    auto openFile = csvFilename.empty() ? filename : csvFilename;
+    string openFile = csvFilename.empty() ? filename : csvFilename;
     fstream file(openFile, ios::in);
 
     vector<vector<string>> csvContent;
