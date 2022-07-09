@@ -25,4 +25,4 @@ It will generate en_US.ts, fr_FR.ts and zh_CN.TS
 
 # Additional notes
 
-Done in a few hours because I could use this tool... I hope it's useful to someone.  Might have major bugs or flaws.
+Done in a few hours because I could use this tool... I hope it's useful to someone.  Might not accept less than perfect input.
