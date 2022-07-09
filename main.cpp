@@ -122,8 +122,6 @@ void generateTsFiles(vector<vector<string>>& csvContent, string& filename, strin
     const auto TRANSLATION_UNTRANSLATED_STRING_LENGTH = strlen(TRANSLATION_UNTRANSLATED_STRING);
 
     for (auto &language: languages) {
-        cout << language << endl;
-
         auto replacements = replacementsByLanguage[language];
         auto langTsFileContents = string(tsFileContents);
 
