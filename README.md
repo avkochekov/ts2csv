@@ -21,7 +21,7 @@ and running:
 
 ts2csv myproject.ts output.csv
 
-It will generate en_US.ts, fr_FR.ts and zh_CN.TS
+It will generate en_US.ts, fr_FR.ts and zh_CN.ts
 
 # Additional notes
 
