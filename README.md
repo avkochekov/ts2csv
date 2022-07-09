@@ -1,4 +1,4 @@
-# QT Ts To CSV tool
+# Qt Ts To CSV tool
 
 Usage:
 
