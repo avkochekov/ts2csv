@@ -7,6 +7,8 @@ ts2csv myproject.ts
 Generates output.csv with the following headers:
 Source, Lang1, Lang2
 
+You are expected to change Lang1, Lang2, Lang3, etc... to whatever languages you need, and put the translations in 
+that column.
 
 # Reverse usage
 
