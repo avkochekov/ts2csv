@@ -43,6 +43,10 @@ void processCsvFileLine(string& line, vector<string>& row, vector<vector<string>
             break;
         }
 
+        if (start == end) {
+            break;
+        }
+
         word = line.substr(start, end - start);
 
         row.push_back(word);
