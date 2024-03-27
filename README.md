@@ -1,28 +1,36 @@
-# Qt Ts To CSV tool
+# Qt Ts to|from CSV convertion tool
 
-Usage:
+Based on [https://github.com/undeclared/ts2csv](https://github.com/undeclared/ts2csv)
 
-ts2csv myproject.ts
+## TS to CSV convertion
 
-Generates output.csv with the following headers:
-Source, Lang1, Lang2
+```
+ts2csv translation.ts
+```
 
-You are expected to change Lang1, Lang2, Lang3, etc... to whatever languages you need, and put the translations in 
+Generates __output.csv__ with the following headers:
+```
+"Source","Lang1","Lang2"
+```
+
+You are expected to change _LangN_ to whatever languages you need, and put the translations in 
 that column.
 
-# Reverse usage
+## CSV to TS convertion
 
-It will create a .ts file for every language that has a header in the CSV file
+It will create a _LangN.ts_ file for every language that has a header in the CSV file
 
 For example, putting the headers and filling with the translations:
-Source, en_US, fr_FR, zh_CN
-
+```
+"Source","en_US","fr_FR","zh_CN"
+```
 and running:
-
+```
 ts2csv myproject.ts output.csv
-
-It will generate en_US.ts, fr_FR.ts and zh_CN.ts
+```
+It will generate _en_US.ts_, _fr_FR.ts_ and _zh_CN.ts_
 
 # Additional notes
-
-Done in a few hours because I could use this tool... I hope it's useful to someone.  Might not accept less than perfect input.
+* Updated README.md
+* Fixed some issues I was having.
+* Updated .gitignore
