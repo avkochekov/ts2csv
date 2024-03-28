@@ -9,6 +9,7 @@
 
 using namespace std;
 
+static int langsCount = 0;
 
 void processTsFileLine(string& line, vector<string>& translationStrings)
 {
@@ -27,27 +28,29 @@ void processCsvFileLine(string& line, vector<string>& row, vector<vector<string>
 {
     row.clear();
 
-    size_t start = -1, end = -1, lastEndIndex = 0;
+    size_t start = -1, end = -1;
+
+    size_t pos = line.find(",,");;
+    while(pos != -1) {
+        line.replace(pos, 2, ",\"\",");
+        pos = line.find(",,", pos);;
+    }
+
 
     while(true) {
-        start = line.find('"', lastEndIndex) + 1;
+        start = line.find('"', end + 1);
 
         if (start == -1) {
             break;
         }
 
-        end = line.find('"', start);
-        lastEndIndex = end + 1;
+        end = line.find('"', start + 1);
 
         if (end == -1) {
             break;
         }
 
-        if (start == end) {
-            break;
-        }
-
-        word = line.substr(start, end - start);
+        word = line.substr(start + 1, end - start - 1);
 
         row.push_back(word);
     }
@@ -81,16 +84,20 @@ map<string, map<string, string>> generateReplacementsByLanguageMap(vector<vector
 
         string sourceString = content[0];
 
-        for (int i = 1; i < languages.size(); i++) {
+        for (int i = 1; i <= languages.size(); i++) {
             string lang = languages[i - 1];
 
             if (lang.empty()) {
-                break;
+                continue;
             }
 
             map<string, string>* map = &replacementsByLanguage[lang];
 
-            map->emplace(sourceString, content[i]);
+            if (i < content.size()) {
+                map->emplace(sourceString, content[i]);
+            } else {
+                map->emplace(sourceString, string());
+            }
         }
     }
 
